@@ -1,0 +1,12 @@
+{
+  "_comment_1": "ЩО ЦЕ: ОПЦІЙНИЙ manifest. Якщо його немає — Claude Code все одно знаходить skills/agents/hooks за структурою папок. Manifest додає версіювання й namespace.",
+  "_comment_2": "НАВІЩО: щоб віддати цей .claude/ (hooks + skill + subagent) команді як ОДНУ installable-одиницю замість copy-paste файлів вручну.",
+  "_comment_3": "ЯК ВСТАНОВИТИ (з боку іншої людини): /plugin install your-org@claude-demo-project-plugin (після додавання marketplace: /plugin marketplace add your-org/claude-plugins)",
+
+  "name": "claude-demo-project-plugin",
+  "version": "0.1.0",
+  "description": "Демо-набір: verify-changes skill, code-reviewer subagent, safety hooks",
+  "author": {
+    "name": "Volodymyr Klekot"
+  }
+}

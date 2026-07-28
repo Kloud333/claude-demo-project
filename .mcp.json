@@ -1,0 +1,19 @@
+{
+  "_comment_1": "ЩО ЦЕ: MCP servers на рівні ПРОЄКТУ. Комітиться в git — уся команда отримує ОДНАКОВІ сервери автоматично, без ручного налаштування у кожного.",
+  "_comment_2": "ЯК СТВОРИТИ: команда `claude mcp add --transport <http|stdio> <name> <url-або-команда>` сама допише сюди запис.",
+  "_comment_3": "Два типи: HTTP (віддалений сервіс, мережа) і stdio (локальний процес на машині).",
+
+  "mcpServers": {
+    "linear-server": {
+      "_comment": "HTTP-приклад: claude mcp add --transport http linear-server https://mcp.linear.app/mcp",
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "dev-utils": {
+      "_comment": "Stdio-приклад: claude mcp add --transport stdio dev-utils -- python ./mcp-server/server.py",
+      "type": "stdio",
+      "command": "python",
+      "args": ["./mcp-server/server.py"]
+    }
+  }
+}

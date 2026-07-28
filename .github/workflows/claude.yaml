@@ -1,0 +1,47 @@
+# ЩО ЦЕ: GitHub Action, що дозволяє тегати @claude прямо в коментарях
+# issue/PR — Claude виконає задачу і сам запушить зміни.
+#
+# ЯК НАЛАШТУВАТИ В РЕАЛЬНОМУ РЕПО:
+#   1. Всередині Claude Code: /install-github-app
+#      (потрібні права repo admin — встановлює GitHub app + секрет
+#      ANTHROPIC_API_KEY в Settings → Secrets вашого репо)
+#   2. Цей файл з'явиться автоматично (або можна створити вручну, як тут)
+#
+# ЯК ВИКОРИСТАТИ: напиши в коментарі PR або issue:
+#   @claude implement the fix described above
+# Action підхопить це, Claude запушить коміт і опише, що зробив.
+#
+# ПРИМІТКА: це ОКРЕМИЙ шлях від "Managed Code Review" (Anthropic-хостований
+# сервіс, який вмикається в admin settings без жодного workflow-файлу).
+# Цей Action — DIY-шлях: коли треба, щоб Claude РОБИВ щось у CI,
+# а не тільки коментував.
+
+name: Claude Code Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  claude-response:
+    # Спрацьовує, тільки якщо в коментарі є тригер-фраза
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          trigger_phrase: "@claude"
+          prompt: "Address the request in the comment. Follow the project's CLAUDE.md conventions."
+          # --max-turns обмежує agent loop, щоб не крутився вічно.
+          # Permission mode тут не питає підтверджень — нема кому відповісти в CI.
+          claude_args: "--max-turns 5 --model claude-sonnet-5"

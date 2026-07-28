@@ -1,0 +1,13 @@
+{
+  "name": "claude-demo-project",
+  "version": "1.0.0",
+  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація)",
+  "main": "src/example.js",
+  "scripts": {
+    "dev": "echo '(демо) тут запускався б dev-сервер, напр. nodemon src/example.js'",
+    "test": "echo '(демо) тут запускались б тести, напр. jest' && exit 0",
+    "lint": "echo '(демо) тут запускався б лінтер, напр. eslint .'",
+    "build": "echo '(демо) тут запускалась б збірка'"
+  },
+  "license": "MIT"
+}

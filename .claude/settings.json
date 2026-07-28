@@ -1,0 +1,40 @@
+{
+  "_comment_1": "ЩО ЦЕ: project-level конфіг Claude Code. Комітиться в git — уся команда отримує однакові hooks/permission-налаштування автоматично.",
+  "_comment_2": "ЯК СТВОРИТИ: редагуй вручну АБО керуй через команду /hooks всередині Claude Code сесії — вона сама запише сюди JSON.",
+  "_comment_3": "СПРАВЖНІЙ settings.json НЕ підтримує коментарі (це чистий JSON) — тут вони залишені лише для навчальних цілей цього демо-репо.",
+
+  "permissions": {
+    "_comment": "Permission modes: manual | acceptEdits | plan | auto | dontAsk | bypassPermissions. Змінюється в рантаймі через Shift+Tab, тут - дефолт для проєкту.",
+    "defaultMode": "acceptEdits"
+  },
+
+  "hooks": {
+    "_comment": "Кожна секція = подія (PreToolUse, PostToolUse, Stop, ...). matcher визначає, на які tools реагувати ('Bash', 'Edit|Write', і т.д.)",
+
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "_comment": "CLAUDE_PROJECT_DIR — env variable, що завжди вказує на корінь проєкту, незалежно від поточної working directory Claude",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-dangerous-commands.sh"
+          }
+        ]
+      }
+    ],
+
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "_comment": "Спрацьовує ПІСЛЯ кожної правки файлу — авто-форматування. Заблокувати виклик тут вже пізно (tool вже відпрацював), але можна повернути фідбек Claude.",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-after-edit.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
