@@ -1,0 +1,27 @@
+{
+  "_comment_1": "⚠️ ЦЕ РЕФЕРЕНС-ПРИКЛАД, НЕ ЖИВА КОНФІГУРАЦІЯ. Enterprise managed settings деплоїть IT/admin команда на рівні всієї організації — окремий розробник цей файл не редагує і не комітить у свій repo.",
+  "_comment_2": "ПРІОРИТЕТ: Enterprise skills/налаштування ПЕРЕКРИВАЮТЬ personal, project і plugin skills з тією самою назвою (найвищий рівень у Priority Hierarchy: Enterprise → Personal → Project → Plugins).",
+  "_comment_3": "Реальний випадок використання: обов'язкові стандарти, security requirements, compliance — усе, де ключове слово 'must', а не 'should'.",
+
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp"
+  },
+
+  "companyAnnouncements": [
+    "Welcome to Acme Corp! Review our code guidelines at docs.acme.com",
+    "Our new security policies are now active. For more info check out security.acme.com"
+  ],
+
+  "strictKnownMarketplaces": [
+    {
+      "_comment": "Обмежує, ЗВІДКИ можна встановлювати plugins в межах організації — запобігає встановленню недовірених/неперевірених джерел",
+      "source": "github",
+      "repo": "acme-corp/approved-plugins"
+    },
+    {
+      "source": "npm",
+      "package": "@acme-corp/compliance-plugins"
+    }
+  ]
+}

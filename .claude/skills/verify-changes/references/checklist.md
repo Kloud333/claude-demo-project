@@ -1,13 +1,15 @@
 <!--
-  ЩО ЦЕ: side-файл skill з детальним матеріалом. Claude читає ЛИШЕ коли
-  реально потрібна ця глибина деталей — на відміну від skill.md, який
-  завжди в контексті (щойно skill викликаний).
+  ЩО ЦЕ: side-файл skill з детальним матеріалом (references/). Claude
+  читає ЛИШЕ коли реально потрібна ця глибина деталей — на відміну від
+  SKILL.md, який завжди в контексті (щойно skill викликаний).
+  Це і є принцип Progressive Disclosure.
 -->
 
 # Verification Checklist (Full Reference)
 
 ## 1. Test suite
-- Run `./check.sh` — this wraps the project's actual test command.
+- Run `scripts/check.sh` (шлях відносно кореня skill-папки) — this wraps
+  the project's actual test command.
 - A passing test suite is necessary but NOT sufficient — see below.
 
 ## 2. Diff review

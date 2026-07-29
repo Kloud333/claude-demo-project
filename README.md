@@ -2,7 +2,7 @@
 
 Це навчальний тестовий проєкт — приклад структури `.claude` з усіма
 компонентами, які вивчаються в курсах Anthropic (AI Fluency, Claude 101,
-Claude Code in Action, Claude Code 101).
+Claude Code in Action, Claude Code 101, Introduction to Agent Skills).
 
 **Мета:** мати робочий приклад під рукою — щоб завжди можна було глянути,
 де що створюється, як виглядає конфіг, і які команди треба виконати,
@@ -34,15 +34,32 @@ claude-demo-project/
 │   ├── commands/
 │   │   └── audit.md                   # Custom slash-команда /audit
 │   ├── agents/
-│   │   └── code-reviewer.md           # Subagent для рев'ю коду
-│   ├── skills/
-│   │   └── verify-changes/
-│   │       ├── skill.md               # Тригер + опис skill
-│   │       ├── reference.md           # Детальний довідковий матеріал
-│   │       └── check.sh               # Виконуваний скрипт (не в контексті)
+│   │   └── code-reviewer.md           # Subagent + приклад поля `skills:` (важлива деталь!)
+│   ├── skills/                        # PROJECT-level skills (3-й рівень priority hierarchy)
+│   │   ├── verify-changes/
+│   │   │   ├── SKILL.md               # Тригер + опис + allowed-tools + model
+│   │   │   ├── references/
+│   │   │   │   └── checklist.md       # Progressive disclosure: детальний матеріал
+│   │   │   └── scripts/
+│   │   │       └── check.sh           # Виконуваний скрипт (не в контексті)
+│   │   └── codebase-onboarding/
+│   │       ├── SKILL.md               # Приклад multi-level progressive disclosure
+│   │       ├── references/
+│   │       │   ├── architecture-guide.md   # Level 2 — завантажується рідко
+│   │       │   └── deep-dive-guide.md      # Level 3 — завантажується ще рідше
+│   │       ├── scripts/
+│   │       │   └── validate-env.sh
+│   │       └── assets/
+│   │           └── README.md          # Пояснення: сюди діаграми/шаблони/дані-файли
 │   └── hooks/
 │       ├── block-dangerous-commands.sh # PreToolUse: блокує небезпечні команди
 │       └── format-after-edit.sh        # PostToolUse: авто-форматування
+├── docs/
+│   └── examples/                       # Референс-приклади (НЕ жива конфігурація)
+│       ├── README.md                   # Пояснює, чому ці приклади не в .claude/
+│       ├── personal-skill-pr-description/
+│       │   └── SKILL.md                # Приклад PERSONAL skill (2-й рівень пріоритету)
+│       └── enterprise-managed-settings.example.json  # Приклад ENTERPRISE settings (1-й рівень)
 └── src/
     └── example.js                      # Приклад вихідного коду проєкту
 ```
@@ -67,19 +84,24 @@ claude
 /agents
 # → "Create new agent" → обрати scope/tools/опис
 
-# 5. Створити custom slash-команду
+# 5. Створити skill (вручну або попросити Claude згенерувати)
+mkdir -p .claude/skills/my-skill-name
+# → покласти SKILL.md всередину (name + description у frontmatter)
+# → ОБОВ'ЯЗКОВО перезапустити Claude Code, інакше skill не підхопиться
+
+# 6. Створити custom slash-команду
 mkdir -p .claude/commands
 # → покласти .md файл у папку, перезапустити Claude Code
 
-# 6. Додати MCP server
+# 7. Додати MCP server
 claude mcp add --transport http linear-server https://mcp.linear.app/mcp
 claude mcp add --transport stdio dev-utils -- python ./mcp-server/server.py
 
-# 7. Налаштувати hooks через інтерактивне меню
+# 8. Налаштувати hooks через інтерактивне меню
 /hooks
 # → або редагувати .claude/settings.json напряму
 
-# 8. Перевірити стан контексту й MCP
+# 9. Перевірити стан контексту й MCP
 /context
 /mcp
 ```
@@ -129,6 +151,34 @@ git push -u origin main
 
 ---
 
+## 🧩 Skills: Priority Hierarchy
+
+Коли назви skills конфліктують, перемагає той, що вищий у списку:
+
+```
+Enterprise  →  Personal  →  Project  →  Plugins
+(найвищий)                              (найнижчий)
+```
+
+| Рівень | Де в цьому демо | Реальна локація |
+|---|---|---|
+| **Enterprise** | `docs/examples/enterprise-managed-settings.example.json` (референс) | Керується IT/admin, не в repo розробника |
+| **Personal** | `docs/examples/personal-skill-pr-description/` (референс) | `~/.claude/skills/` — слідує за тобою по всіх проєктах |
+| **Project** | `.claude/skills/verify-changes/`, `.claude/skills/codebase-onboarding/` | Цей repo — реально активна конфігурація |
+| **Plugins** | `.claude-plugin/plugin.json` | Встановлені через marketplace |
+
+> ⚠️ **Subagents НЕ бачать skills автоматично!** Дивись коментар у
+> `.claude/agents/code-reviewer.md` — потрібне явне поле `skills:`.
+
+### Skills Validator
+Перед тим, як ділитись skill з командою — прожени через **agent skills validator** (встановлюється легше за все через `uv`). Ловить структурні проблеми (неправильна назва файлу, відсутня директорія тощо) до того, як витрачати час на дебаг.
+
+```bash
+claude --debug   # покаже помилки завантаження skills/hooks/MCP
+```
+
+---
+
 ## 🔑 Ключові команди для щоденної роботи (шпаргалка)
 
 | Команда | Що робить |
@@ -136,6 +186,7 @@ git push -u origin main
 | `/init` | Аналізує кодбазу, генерує CLAUDE.md |
 | `/agents` | Створити/редагувати subagents |
 | `/hooks` | Налаштувати hooks через меню |
+| `mkdir .claude/skills/<name>` + `SKILL.md` | Створити skill (потрібен рестарт після створення/зміни!) |
 | `/mcp` | Керування MCP-серверами |
 | `/context` | Показати використання context window |
 | `/compact [інструкція]` | Стиснути розмову, зберігши вказане |
@@ -152,6 +203,7 @@ git push -u origin main
 
 ## 📚 З якого курсу що взято
 
-- **CLAUDE.md, hooks, skills, MCP, subagents** — Claude Code in Action + Claude Code 101
+- **CLAUDE.md, hooks, MCP, subagents (базово)** — Claude Code in Action + Claude Code 101
 - **Permission modes** — Claude Code in Action → Permission Modes
+- **Skills: SKILL.md формат, allowed-tools, progressive disclosure, priority hierarchy, skills+subagents** — Introduction to Agent Skills
 - **4D Framework (Delegation/Description/Discernment/Diligence)** — AI Fluency: Framework & Foundations

@@ -5,7 +5,7 @@
 
   "name": "claude-demo-project-plugin",
   "version": "0.1.0",
-  "description": "Демо-набір: verify-changes skill, code-reviewer subagent, safety hooks",
+  "description": "Демо-набір: verify-changes + codebase-onboarding skills, code-reviewer subagent, safety hooks",
   "author": {
     "name": "Volodymyr Klekot"
   }

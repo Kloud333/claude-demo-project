@@ -7,6 +7,15 @@
   інтерактивний майстер сам згенерує подібний файл. Можна й вручну.
 
   ФОРМАТ: Markdown файл з YAML frontmatter (між --- та ---) зверху.
+
+  ⚠️ КРИТИЧНА ПАСТКА (Sharing Skills): subagents НЕ бачать твої
+  skills автоматично! Вони стартують зі свіжого, чистого контексту.
+    - Built-in agents (Explorer, Plan, Verify) — взагалі НЕ можуть
+      використовувати skills.
+    - Custom subagents (як цей) — можуть, але ТІЛЬКИ якщо skill явно
+      перелічений у полі `skills:` нижче.
+  Skills для subagent завантажуються ПРИ СТАРТІ subagent, а не on-demand,
+  як у головній розмові.
 -->
 ---
 name: code-reviewer
@@ -22,6 +31,10 @@ tools:
   - Bash(git diff:*)
 model: sonnet
 color: orange
+skills: verify-changes
+# ↑ Без цього рядка code-reviewer НЕ мав би доступу до verify-changes
+# skill, навіть якщо той лежить у .claude/skills поряд. Список назв,
+# через кому, якщо декілька: "verify-changes, codebase-onboarding"
 ---
 
 You are a senior code reviewer with a fresh, unbiased perspective — you did
