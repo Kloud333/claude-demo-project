@@ -100,6 +100,8 @@ mkdir -p .claude/commands
 # 7. Додати MCP server
 claude mcp add --transport http linear-server https://mcp.linear.app/mcp
 claude mcp add --transport stdio dev-utils -- python ./mcp-server/server.py
+# → Реально робочий приклад дивись у mcp-server-demo/ (детальний README там)
+claude mcp add --transport stdio document-mcp -- node ./mcp-server-demo/server.js
 
 # 8. Налаштувати hooks через інтерактивне меню
 /hooks
