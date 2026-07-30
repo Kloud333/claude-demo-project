@@ -2,7 +2,8 @@
   "_comment_1": "ЩО ЦЕ: MCP servers на рівні ПРОЄКТУ. Комітиться в git — уся команда отримує ОДНАКОВІ сервери автоматично, без ручного налаштування у кожного.",
   "_comment_2": "ЯК СТВОРИТИ: команда `claude mcp add --transport <http|stdio> <name> <url-або-команда>` сама допише сюди запис.",
   "_comment_3": "Два типи: HTTP (віддалений сервіс, мережа) і stdio (локальний процес на машині).",
-  "_comment_4": "⚠️ Обидва сервери нижче — ІЛЮСТРАТИВНІ приклади (Linear і локальний python-скрипт не існують в цьому demo-репо). Показують ФОРМАТ конфігурації, не робочі підключення.",
+  "_comment_4": "⚠️ 'linear-server' і 'dev-utils' нижче — ІЛЮСТРАТИВНІ приклади (Linear і неіснуючий python-скрипт). Показують ФОРМАТ конфігурації, не робочі підключення.",
+  "_comment_5": "✅ 'document-mcp' — РЕАЛЬНО РОБОЧИЙ приклад (mcp-server-demo/server.js, курс 'Introduction to MCP'). npm install у корені проєкту → перевірити: npm run mcp:test або npm run mcp:inspect",
 
   "mcpServers": {
     "linear-server": {
@@ -15,6 +16,13 @@
       "type": "stdio",
       "command": "python",
       "args": ["./mcp-server/server.py"]
+    },
+    "document-mcp": {
+      "_comment": "РЕАЛЬНИЙ working приклад: claude mcp add --transport stdio document-mcp -- node ./mcp-server-demo/server.js",
+      "type": "stdio",
+      "command": "node",
+      "args": ["./mcp-server-demo/server.js"]
     }
   }
 }
+

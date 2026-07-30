@@ -1,13 +1,20 @@
 {
   "name": "claude-demo-project",
   "version": "1.0.0",
-  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація)",
+  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація) + робочий MCP server приклад (mcp-server-demo/)",
   "main": "src/example.js",
   "scripts": {
     "dev": "echo '(демо) тут запускався б dev-сервер, напр. nodemon src/example.js'",
     "test": "echo '(демо) тут запускались б тести, напр. jest' && exit 0",
     "lint": "echo '(демо) тут запускався б лінтер, напр. eslint .'",
-    "build": "echo '(демо) тут запускалась б збірка'"
+    "build": "echo '(демо) тут запускалась б збірка'",
+    "mcp:server": "node mcp-server-demo/server.js",
+    "mcp:inspect": "npx @modelcontextprotocol/inspector node mcp-server-demo/server.js",
+    "mcp:test": "node mcp-server-demo/test-client.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
   },
   "license": "MIT"
 }

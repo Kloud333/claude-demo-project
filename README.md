@@ -54,6 +54,10 @@ claude-demo-project/
 │   └── hooks/
 │       ├── block-dangerous-commands.sh # PreToolUse: блокує небезпечні команди
 │       └── format-after-edit.sh        # PostToolUse: авто-форматування
+├── mcp-server-demo/                    # 🆕 РЕАЛЬНО РОБОЧИЙ MCP server (JS SDK)
+│   ├── server.js                       # "DocumentMCP" — tools для read/edit документів
+│   ├── test-client.js                  # Автономна перевірка без браузера
+│   └── README.md                       # Що/навіщо/як + порівняння з Python-версією курсу
 ├── docs/
 │   └── examples/                       # Референс-приклади (НЕ жива конфігурація)
 │       ├── README.md                   # Пояснює, чому ці приклади не в .claude/
@@ -207,3 +211,4 @@ claude --debug   # покаже помилки завантаження skills/h
 - **Permission modes** — Claude Code in Action → Permission Modes
 - **Skills: SKILL.md формат, allowed-tools, progressive disclosure, priority hierarchy, skills+subagents** — Introduction to Agent Skills
 - **4D Framework (Delegation/Description/Discernment/Diligence)** — AI Fluency: Framework & Foundations
+- **`mcp-server-demo/` — робочий MCP server (tools)** — Introduction to Model Context Protocol (модуль "Defining tools with MCP", переписано з Python на JS)
