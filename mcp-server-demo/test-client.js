@@ -1,6 +1,6 @@
 // ЩО ЦЕ: мінімальний MCP client для автоматизованої перевірки server.js
 // без браузера/Inspector — піднімає server.js як subprocess (stdio),
-// викликає tools і виводить результат у консоль.
+// викликає tools/resources/prompts і виводить результат у консоль.
 //
 // НАВІЩО: MCP Inspector (browser-based) — головний інструмент для
 // ручного тестування (див. курс, модуль "The server inspector"). Але
@@ -24,6 +24,7 @@ async function main() {
   const client = new Client({ name: "test-client", version: "1.0.0" });
   await client.connect(transport);
 
+  // --- TOOLS ---
   const tools = await client.listTools();
   console.log("✅ Tools available:", tools.tools.map((t) => t.name));
 
@@ -52,8 +53,48 @@ async function main() {
     after.content[0].text
   );
 
+  // --- RESOURCES ---
+  const resources = await client.listResources();
+  console.log(
+    "✅ Direct resources:",
+    resources.resources.map((r) => r.uri)
+  );
+
+  const templates = await client.listResourceTemplates();
+  console.log(
+    "✅ Resource templates:",
+    templates.resourceTemplates.map((t) => t.uriTemplate)
+  );
+
+  const docList = await client.readResource({ uri: "docs://documents" });
+  console.log("✅ docs://documents →", docList.contents[0].text);
+
+  const docContent = await client.readResource({
+    uri: "docs://documents/report.pdf",
+  });
+  console.log(
+    "✅ docs://documents/report.pdf →",
+    docContent.contents[0].text
+  );
+
+  // --- PROMPTS ---
+  const prompts = await client.listPrompts();
+  console.log(
+    "✅ Prompts available:",
+    prompts.prompts.map((p) => p.name)
+  );
+
+  const formatPrompt = await client.getPrompt({
+    name: "format",
+    arguments: { doc_id: "report.pdf" },
+  });
+  console.log(
+    "✅ prompt 'format' (перше повідомлення, скорочено):",
+    formatPrompt.messages[0].content.text.slice(0, 60) + "..."
+  );
+
   await client.close();
-  console.log("\n🎉 Усі перевірки пройшли успішно.");
+  console.log("\n🎉 Усі перевірки пройшли успішно (tools + resources + prompts).");
 }
 
 main().catch((err) => {

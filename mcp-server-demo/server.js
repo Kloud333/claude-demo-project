@@ -9,12 +9,16 @@
 // того, ЯК САМОМУ побудувати MCP server, який Claude Code (чи будь-який
 // інший MCP client) може підключити через .mcp.json.
 //
-// СТАТУС: поступова реалізація, синхронно з курсом "Introduction to MCP".
-// Зараз реалізовано тільки tools (Defining tools with MCP). Resources і
-// prompts додамо після відповідних модулів курсу — так само, як росте
-// starter-проєкт курсу (cli_project) на Python.
+// СТАТУС: реалізація завершена — усі 3 примітиви MCP присутні:
+//   • Tools     — дії, які Claude сам вирішує викликати (model-controlled)
+//   • Resources — дані для UI/контексту, вирішує застосунок (app-controlled)
+//   • Prompts   — готові workflow, запускає юзер (user-controlled)
+// Детальніше про різницю — mcp-server-demo/README.md.
 
-const { McpServer } = require("@modelcontextprotocol/sdk/server/mcp.js");
+const {
+  McpServer,
+  ResourceTemplate,
+} = require("@modelcontextprotocol/sdk/server/mcp.js");
 const {
   StdioServerTransport,
 } = require("@modelcontextprotocol/sdk/server/stdio.js");
@@ -37,9 +41,11 @@ const docs = {
     "These specifications define the technical requirements for the equipment.",
 };
 
+// ============================================================
+// TOOLS — Claude сам вирішує, коли їх викликати
+// ============================================================
+
 // Tool 1: читання документа.
-// inputSchema — це raw-об'єкт із zod-схемами (аналог Field(description=...)
-// у Python SDK) — SDK сам генерує з нього JSON schema для Claude.
 server.registerTool(
   "read_doc_contents",
   {
@@ -83,11 +89,114 @@ server.registerTool(
   }
 );
 
-// TODO (наступні модулі курсу):
-// - resource: список усіх doc id's
-// - resource: вміст конкретного doc (templated URI)
-// - prompt: переписати doc у markdown
-// - prompt: підсумувати doc
+// ============================================================
+// RESOURCES — дані для застосунку (UI-автокомпліт, контекст)
+// ============================================================
+
+// Direct resource: статичний URI без параметрів → список усіх doc id's.
+// Використання: автокомпліт "@" у чат-інтерфейсі показує ці id's.
+server.registerResource(
+  "list_documents",
+  "docs://documents",
+  {
+    title: "Список документів",
+    description: "Повертає список id всіх доступних документів (JSON-масив).",
+    mimeType: "application/json",
+  },
+  async (uri) => ({
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: "application/json",
+        text: JSON.stringify(Object.keys(docs)),
+      },
+    ],
+  })
+);
+
+// Templated resource: URI з параметром {doc_id} → вміст конкретного doc.
+// SDK сам парсить {doc_id} з URI і передає другим аргументом callback'а.
+// Використання: коли юзер згадує "@report.pdf" — вміст інжектиться прямо
+// в промпт до Claude, без окремого tool call.
+server.registerResource(
+  "fetch_document",
+  new ResourceTemplate("docs://documents/{doc_id}", { list: undefined }),
+  {
+    title: "Вміст документа",
+    description: "Повертає повний текстовий вміст конкретного документа за id.",
+    mimeType: "text/plain",
+  },
+  async (uri, { doc_id }) => {
+    if (!(doc_id in docs)) {
+      throw new Error(`Doc with id ${doc_id} not found`);
+    }
+    return {
+      contents: [{ uri: uri.href, mimeType: "text/plain", text: docs[doc_id] }],
+    };
+  }
+);
+
+// ============================================================
+// PROMPTS — готові workflow, які запускає юзер (slash-команда)
+// ============================================================
+
+// Prompt 1: переформатувати документ у markdown.
+// Юзер друкує "/format", обирає doc_id — Claude отримує готову, наперед
+// продуману інструкцію (замість того, щоб юзер сам писав промпт).
+server.registerPrompt(
+  "format",
+  {
+    title: "Format as Markdown",
+    description: "Rewrites the contents of the document in Markdown format.",
+    argsSchema: {
+      doc_id: z.string().describe("Id of the document to format"),
+    },
+  },
+  async ({ doc_id }) => ({
+    messages: [
+      {
+        role: "user",
+        content: {
+          type: "text",
+          text: `Your goal is to reformat a document to be written with markdown syntax.
+
+The id of the document you need to reformat is:
+<document_id>
+${doc_id}
+</document_id>
+
+Add in headers, bullet points, tables, etc as necessary. Feel free to add in structure.
+Use the 'edit_document' tool to edit the document. After the document has been reformatted, let the user know it's done.`,
+        },
+      },
+    ],
+  })
+);
+
+// Prompt 2: підсумувати документ.
+// Той самий патерн, інша спеціалізована задача — навмисно коротка
+// інструкція, щоб показати, що prompts не обов'язково великі.
+server.registerPrompt(
+  "summarize",
+  {
+    title: "Summarize document",
+    description: "Summarizes the contents of the document in 2-3 sentences.",
+    argsSchema: {
+      doc_id: z.string().describe("Id of the document to summarize"),
+    },
+  },
+  async ({ doc_id }) => ({
+    messages: [
+      {
+        role: "user",
+        content: {
+          type: "text",
+          text: `Read the document with id "${doc_id}" using the 'read_doc_contents' tool, then summarize its contents in 2-3 concise sentences.`,
+        },
+      },
+    ],
+  })
+);
 
 async function main() {
   const transport = new StdioServerTransport();
