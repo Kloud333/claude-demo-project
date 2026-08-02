@@ -1,7 +1,7 @@
 {
   "name": "claude-demo-project",
   "version": "1.0.0",
-  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація) + робочий MCP server приклад (mcp-server-demo/)",
+  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація) + 2 робочі MCP-приклади (mcp-server-demo/, mcp-todo-example/)",
   "main": "src/example.js",
   "scripts": {
     "dev": "echo '(демо) тут запускався б dev-сервер, напр. nodemon src/example.js'",
@@ -10,7 +10,10 @@
     "build": "echo '(демо) тут запускалась б збірка'",
     "mcp:server": "node mcp-server-demo/server.js",
     "mcp:inspect": "npx @modelcontextprotocol/inspector node mcp-server-demo/server.js",
-    "mcp:test": "node mcp-server-demo/test-client.js"
+    "mcp:test": "node mcp-server-demo/test-client.js",
+    "todo:server": "node mcp-todo-example/server.js",
+    "todo:demo": "node mcp-todo-example/demo.js",
+    "todo:inspect": "npx @modelcontextprotocol/inspector node mcp-todo-example/server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

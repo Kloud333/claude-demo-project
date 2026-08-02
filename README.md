@@ -58,6 +58,11 @@ claude-demo-project/
 │   ├── server.js                       # "DocumentMCP" — tools для read/edit документів
 │   ├── test-client.js                  # Автономна перевірка без браузера
 │   └── README.md                       # Що/навіщо/як + порівняння з Python-версією курсу
+├── mcp-todo-example/                    # ✅ Другий, мінімальний MCP-приклад (todo-список)
+│   ├── server.js                        # "TodoMCP" — 2 tools, 2 resources, 1 prompt (без args)
+│   ├── client.js                        # Власний клас TodoMCPClient (аналог курсового MCPClient)
+│   ├── demo.js                          # Наскрізний сценарій — усі примітиви в одному прогоні
+│   └── README.md                        # Коротко: що є і навіщо
 ├── docs/
 │   └── examples/                       # Референс-приклади (НЕ жива конфігурація)
 │       ├── README.md                   # Пояснює, чому ці приклади не в .claude/
@@ -214,3 +219,4 @@ claude --debug   # покаже помилки завантаження skills/h
 - **Skills: SKILL.md формат, allowed-tools, progressive disclosure, priority hierarchy, skills+subagents** — Introduction to Agent Skills
 - **4D Framework (Delegation/Description/Discernment/Diligence)** — AI Fluency: Framework & Foundations
 - **`mcp-server-demo/` — робочий MCP server (tools + resources + prompts)** — Introduction to Model Context Protocol (курс пройдено повністю, переписано з Python на JS)
+- **`mcp-todo-example/` — другий, мінімальний MCP-приклад + власний client-клас** — Introduction to Model Context Protocol (узагальнення всіх модулів курсу в одному компактному прикладі)

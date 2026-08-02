@@ -4,6 +4,7 @@
   "_comment_3": "Два типи: HTTP (віддалений сервіс, мережа) і stdio (локальний процес на машині).",
   "_comment_4": "⚠️ 'linear-server' і 'dev-utils' нижче — ІЛЮСТРАТИВНІ приклади (Linear і неіснуючий python-скрипт). Показують ФОРМАТ конфігурації, не робочі підключення.",
   "_comment_5": "✅ 'document-mcp' — РЕАЛЬНО РОБОЧИЙ приклад (mcp-server-demo/server.js, курс 'Introduction to MCP'). npm install у корені проєкту → перевірити: npm run mcp:test або npm run mcp:inspect",
+  "_comment_6": "✅ 'todo-mcp' — другий, мінімальний РЕАЛЬНО РОБОЧИЙ приклад (mcp-todo-example/server.js). Перевірити: npm run todo:demo або npm run todo:inspect",
 
   "mcpServers": {
     "linear-server": {
@@ -22,6 +23,12 @@
       "type": "stdio",
       "command": "node",
       "args": ["./mcp-server-demo/server.js"]
+    },
+    "todo-mcp": {
+      "_comment": "РЕАЛЬНИЙ working приклад #2: claude mcp add --transport stdio todo-mcp -- node ./mcp-todo-example/server.js",
+      "type": "stdio",
+      "command": "node",
+      "args": ["./mcp-todo-example/server.js"]
     }
   }
 }
