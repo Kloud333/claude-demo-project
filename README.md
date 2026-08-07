@@ -63,6 +63,11 @@ claude-demo-project/
 │   ├── client.js                        # Власний клас TodoMCPClient (аналог курсового MCPClient)
 │   ├── demo.js                          # Наскрізний сценарій — усі примітиви в одному прогоні
 │   └── README.md                        # Коротко: що є і навіщо
+├── claude-api-basics/                    # ✅ Основи Claude API (курс "Building with the Claude API")
+│   ├── chat-utils.js                     # Спільні helpers (adaptive thinking / temperature фікси)
+│   ├── 01-07-*.js                        # Один файл на тему курсу (request→streaming→structured data)
+│   ├── run-all.js                        # Прогін усього поспіль
+│   └── README.md                         # Що/навіщо/як + таблиця "що зламалось у Sonnet 5"
 ├── docs/
 │   └── examples/                       # Референс-приклади (НЕ жива конфігурація)
 │       ├── README.md                   # Пояснює, чому ці приклади не в .claude/
@@ -220,3 +225,4 @@ claude --debug   # покаже помилки завантаження skills/h
 - **4D Framework (Delegation/Description/Discernment/Diligence)** — AI Fluency: Framework & Foundations
 - **`mcp-server-demo/` — робочий MCP server (tools + resources + prompts)** — Introduction to Model Context Protocol (курс пройдено повністю, переписано з Python на JS)
 - **`mcp-todo-example/` — другий, мінімальний MCP-приклад + власний client-клас** — Introduction to Model Context Protocol (узагальнення всіх модулів курсу в одному компактному прикладі)
+- **`claude-api-basics/` — основи Claude API (7 тем: request, multi-turn, system prompts, temperature, streaming, structured data)** — Building with the Claude API (секція "Accessing Claude with the API", перенесено з Python на JS)

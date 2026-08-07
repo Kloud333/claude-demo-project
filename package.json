@@ -1,7 +1,7 @@
 {
   "name": "claude-demo-project",
   "version": "1.0.0",
-  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація) + 2 робочі MCP-приклади (mcp-server-demo/, mcp-todo-example/)",
+  "description": "Демо-проєкт для практики Claude Code (.claude конфігурація) + 2 робочі MCP-приклади + основи Claude API",
   "main": "src/example.js",
   "scripts": {
     "dev": "echo '(демо) тут запускався б dev-сервер, напр. nodemon src/example.js'",
@@ -13,10 +13,20 @@
     "mcp:test": "node mcp-server-demo/test-client.js",
     "todo:server": "node mcp-todo-example/server.js",
     "todo:demo": "node mcp-todo-example/demo.js",
-    "todo:inspect": "npx @modelcontextprotocol/inspector node mcp-todo-example/server.js"
+    "todo:inspect": "npx @modelcontextprotocol/inspector node mcp-todo-example/server.js",
+    "api:request": "node claude-api-basics/01-making-a-request.js",
+    "api:multiturn": "node claude-api-basics/02-multi-turn-conversations.js",
+    "api:chat": "node claude-api-basics/03-chat-exercise.js",
+    "api:system": "node claude-api-basics/04-system-prompts.js",
+    "api:temperature": "node claude-api-basics/05-temperature.js",
+    "api:streaming": "node claude-api-basics/06-response-streaming.js",
+    "api:structured": "node claude-api-basics/07-structured-data.js",
+    "api:all": "node claude-api-basics/run-all.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
+    "dotenv": "^17.4.2",
     "zod": "^4.4.3"
   },
   "license": "MIT"
